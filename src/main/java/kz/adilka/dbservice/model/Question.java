@@ -1,28 +1,23 @@
 package kz.adilka.dbservice.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
-@Entity
+@Entity(name = "Question")
 @Table(name = "questions")
-public class Question extends JPAAuditingModel {
+public class Question {
 
     @Id
-    @GeneratedValue(generator = "question_generator")
-    @SequenceGenerator(
-            name = "question_generator",
-            sequenceName = "question_sequence",
-            initialValue = 1000
-    )
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @NotBlank
-    @Size(min = 3, max = 100)
+    @Column(name = "title")
     private String title;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "description")
     private String description;
+
+    public Question() {}
 
     public Long getId() {
         return id;

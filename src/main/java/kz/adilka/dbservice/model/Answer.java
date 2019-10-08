@@ -6,26 +6,25 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "Answer")
 @Table(name = "answers")
-public class Answer extends JPAAuditingModel {
+public class Answer {
+
     @Id
-    @GeneratedValue(generator = "answer_generator")
-    @SequenceGenerator(
-            name = "answer_generator",
-            sequenceName = "answer_sequence",
-            initialValue = 1000
-    )
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "text")
     private String text;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Question.class)
     @JoinColumn(name = "question_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Question question;
+
+    public Answer() {}
 
     public Long getId() {
         return id;
