@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "answers")
-public class Answers extends JPAAuditingModel {
+public class Answer extends JPAAuditingModel {
     @Id
     @GeneratedValue(generator = "answer_generator")
     @SequenceGenerator(
