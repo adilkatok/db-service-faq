@@ -8,9 +8,9 @@ import javax.persistence.*;
 import java.util.Date;
 
 @MappedSuperclass
-@EntityListeners(BaseModel.class)
+@EntityListeners(JPAAuditingModel.class)
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
-public abstract class BaseModel {
+public abstract class JPAAuditingModel {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -21,4 +21,20 @@ public abstract class BaseModel {
     @Column(name = "updated_at", nullable = false)
     @LastModifiedDate
     private Date updatedAt;
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }
