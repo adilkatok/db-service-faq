@@ -1,4 +1,4 @@
-package kz.adilka.dbservice.model;
+package kz.adilka.dbservice.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
@@ -49,4 +49,6 @@ public class Answer {
     public void setQuestion(Question question) {
         this.question = question;
     }
+
+
 }

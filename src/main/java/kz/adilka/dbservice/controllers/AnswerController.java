@@ -1,9 +1,12 @@
 package kz.adilka.dbservice.controllers;
 
+import kz.adilka.dbservice.MessageSender;
+import kz.adilka.dbservice.config.ApplicationConfigReader;
 import kz.adilka.dbservice.exceptions.ResourceNotFoundException;
-import kz.adilka.dbservice.model.Answer;
-import kz.adilka.dbservice.repository.AnswerRepository;
-import kz.adilka.dbservice.repository.QuestionRepository;
+import kz.adilka.dbservice.models.Answer;
+import kz.adilka.dbservice.repositories.AnswerRepository;
+import kz.adilka.dbservice.repositories.QuestionRepository;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,36 @@ public class AnswerController {
     @Autowired
     private QuestionRepository questionRepository;
 
+
+    private final RabbitTemplate rabbitTemplate;
+
+    private ApplicationConfigReader applicationConfig;
+
+    private MessageSender messageSender;
+
+    public ApplicationConfigReader getApplicationConfig() {
+        return applicationConfig;
+    }
+
+    @Autowired
+    public AnswerController(final RabbitTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
+    }
+
+    @Autowired
+    public void setApplicationConfig(ApplicationConfigReader applicationConfig) {
+        this.applicationConfig = applicationConfig;
+    }
+
+    public MessageSender getMessageSender() {
+        return messageSender;
+    }
+
+    @Autowired
+    public void setMessageSender(MessageSender messageSender) {
+        this.messageSender = messageSender;
+    }
+
     @GetMapping("/questions/{questionId}/answers")
     public List<Answer> getAnswersByQuestionId(@PathVariable Long questionId) {
         return answerRepository.findByQuestionId(questionId);
@@ -25,7 +58,8 @@ public class AnswerController {
 
     @PostMapping("/questions/{questionId}/answers")
     public Answer addAnswer(@PathVariable Long questionId,
-                            @Valid @RequestBody Answer answer) {
+                                   @Valid @RequestBody Answer answer) {
+
         return questionRepository.findById(questionId)
                 .map(question -> {
                     answer.setQuestion(question);
